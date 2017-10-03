@@ -1,21 +1,6 @@
-FROM docker
+FROM thedrhax/jenkins-slave-alpine
 
 MAINTAINER Dmitry Karikh <the.dr.hax@gmail.com>
-
-ENV JENKINS_SLAVE_ROOT="/root/jenkins-slave"
-
-RUN apk --no-cache add openjdk8-jre wget git
-
-RUN mkdir -p "$JENKINS_SLAVE_ROOT"
-
-# Slave settings
-ENV JENKINS_MASTER_USERNAME="jenkins" \
-    JENKINS_MASTER_PASSWORD="jenkins" \
-    JENKINS_MASTER_URL="http://jenkins:8080/" \
-    JENKINS_SLAVE_MODE="exclusive" \
-    JENKINS_SLAVE_NAME="swarm-$RANDOM" \
-    JENKINS_SLAVE_WORKERS="1" \
-    JENKINS_SLAVE_LABELS=""
 
 # Docker & Rancher settings
 ENV DOCKER_HUB_LOGIN="dXNlcm5hbWU6cGFzc3dvcmQ=" \
@@ -24,10 +9,8 @@ ENV DOCKER_HUB_LOGIN="dXNlcm5hbWU6cGFzc3dvcmQ=" \
     RANCHER_ACCESS_KEY="" \
     RANCHER_SECRET_KEY=""
 
-
-# Install Jenkins slave (swarm)
-ADD swarm.jar /
-ADD entrypoint.sh /
+# Install Docker client
+RUN apk --no-cache add docker
 
 # Install rancher-compose
 RUN wget -O /tmp/rc.tgz https://github.com/rancher/rancher-compose/releases/download/v0.12.5/rancher-compose-linux-amd64-v0.12.5.tar.gz > /tmp/rc.tgz \
@@ -36,4 +19,5 @@ RUN wget -O /tmp/rc.tgz https://github.com/rancher/rancher-compose/releases/down
  && rm -rf rancher-compose-v0.12.5 \
  && rm /tmp/rc.tgz
 
-ENTRYPOINT /entrypoint.sh
+# Include required scripts
+ADD prepare-docker.sh /entrypoint.d/
