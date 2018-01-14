@@ -12,8 +12,8 @@ docker run -d -v /var/run/docker.sock:/var/run/docker.sock thedrhax/jenkins-slav
 
 ## Docker & Rancher configuration variables
 
-* `-e DOCKER_HUB_LOGIN="dXNlcm5hbWU6cGFzc3dvcmQ="` — base64 encoded "username:password"
-* `-e DOCKER_HUB_EMAIL="example@example.com"` — your e-mail on Docker Hub
+* `-e REGISTRY_0="user:pass@index.docker.io/v1/"` — Docker Hub
+* `-e REGISTRY_1="user:pass@registry.domain"` — any other private registry
 * `-e RANCHER_URL="http://server_ip:8080/"` — Rancher base URL
 * `-e RANCHER_ACCESS_KEY=""`
 * `-e RANCHER_SECRET_KEY=""`
